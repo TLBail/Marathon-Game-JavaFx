@@ -20,7 +20,7 @@ public class Main extends Application {
 
     private Tirage tirage;
     public ControllerGameView controllerGameView;
-
+    public Stage primaryStage;
 
     public Tirage getGameManager() {
         return tirage;
@@ -29,6 +29,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         main = this;
+        this.primaryStage =primaryStage;
         tirage = new Tirage();
 
 

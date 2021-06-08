@@ -6,8 +6,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Main;
 
 import java.io.IOException;
 
@@ -36,6 +42,8 @@ public class ControllerMenu {
             e.printStackTrace();
         }
     }
+
+
     @FXML
     public void onRecordsClick(ActionEvent event){
         try {

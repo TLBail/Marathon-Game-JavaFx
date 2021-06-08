@@ -1,11 +1,17 @@
 package model;
 
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Tirage {
+public class Tirage implements Serializable {
 
 
     //attribut
@@ -21,6 +27,18 @@ public class Tirage {
     private long timeStart;
     private Record actualJoueur;
 
+
+    private boolean lanceDeDisponible;
+
+    public boolean isLanceDeDisponible() {
+        return lanceDeDisponible;
+    }
+
+    private boolean validationDisponible;
+
+    public boolean isValidationDisponible() {
+        return validationDisponible;
+    }
 
     //getter setter
     public long getTimePassed(){
@@ -54,6 +72,11 @@ public class Tirage {
         joueur2 = new Record("joueur2");
         actualJoueur = joueur1;
 
+        validationDisponible = false;
+        lanceDeDisponible = true;
+
+        windowNewDice(joueur1);
+        windowNewDice(joueur2);
     }
 
 
@@ -66,6 +89,8 @@ public class Tirage {
         for (Dice de: dices    ) {
             de.lancerLeDe();
         }
+        validationDisponible = true;
+        lanceDeDisponible = false;
     }
 
     public void  avancerUnJoueur(int distance){
@@ -73,7 +98,7 @@ public class Tirage {
         if(actualJoueur.distanceRestante <= 0){
             actualJoueur.haveFinish = true;
         }
-
+        validationDisponible = false;
 
     }
 
@@ -88,7 +113,7 @@ public class Tirage {
 
 
     public int getNbdiceToDisplay(){
-        return ((Integer)actualJoueur.distanceRestante).toString().length();
+        return ((Integer)actualJoueur.distanceRestante).toString().length() - 1;
     }
 
 
@@ -112,7 +137,9 @@ public class Tirage {
                 actualJoueur = joueur1;
             }
         }
-
+        dices.clear();
+        lanceDeDisponible = true;
+        validationDisponible = false;
     }
 
 
@@ -120,7 +147,7 @@ public class Tirage {
 
         Enregistreur enregistreur = new Enregistreur();
 
-        ArrayList<Record> records = new ArrayList<>() {{
+        ArrayList<Record> records = new ArrayList<Record>() {{
             add(joueur1);
             add(joueur2);
         }};
@@ -128,5 +155,49 @@ public class Tirage {
 
         Main.getInstance().controllerGameView.afficherScore();
 
+    }
+
+    //méthode qui affiche une fenêtre pour choisir le type du de
+    private void windowNewDice(Record joueur){
+        // New window (Stage)
+        Stage newWindow = new Stage();
+        newWindow.setTitle("Second Stage");
+
+
+
+        Label secondLabel = new Label(joueur.getNom());
+
+        // TextField
+        TextField textField = new TextField();
+
+
+        Button button = new Button("validé");
+        button.setOnAction(event -> {
+            joueur.setNom(textField.getText());
+            newWindow.close();
+        });
+
+
+        AnchorPane secondaryLayout = new AnchorPane();
+        secondaryLayout.getChildren().addAll(secondLabel, textField, button);
+
+
+        AnchorPane.setLeftAnchor(secondLabel, 50d);
+        AnchorPane.setRightAnchor(secondLabel, 50d);
+        AnchorPane.setTopAnchor(textField, 50d);
+        AnchorPane.setTopAnchor(button, 80d);
+        AnchorPane.setLeftAnchor(textField, 10d);
+        AnchorPane.setRightAnchor(textField, 10d);
+        AnchorPane.setRightAnchor(button, 10d);
+        AnchorPane.setLeftAnchor(button, 10d);
+        Scene secondScene = new Scene(secondaryLayout, 230, 120);
+
+        newWindow.setScene(secondScene);
+
+        // Set position of second window, related to primary window.
+        newWindow.setX(Main.getInstance().primaryStage.getX() +400 );
+        newWindow.setY(Main.getInstance().primaryStage.getY() + 200);
+
+        newWindow.show();
     }
 }

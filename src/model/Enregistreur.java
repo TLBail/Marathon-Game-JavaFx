@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Enregistreur {
+public class Enregistreur implements Serializable {
 
 
     public static final File savedir = new File(new File(System.getProperty("user.home")), ".marathon");
@@ -22,6 +22,10 @@ public class Enregistreur {
 
         Records records = new Records();
         records.records = recordToSave;
+
+
+        if(chargerScore() != null)
+            records.records.addAll(chargerScore());
 
         ObjectOutputStream oos = null;
         final FileOutputStream fichier;
@@ -44,6 +48,26 @@ public class Enregistreur {
                 ex.printStackTrace();
             }
         }
+    }
+
+    public List<Record> chargerScore() {
+        // ouverture d'un flux sur un fichier
+        ObjectInputStream ois = null;
+        try {
+            ois = new ObjectInputStream(new FileInputStream(savedir + "/RecordsMarathon.csv"));
+
+            // désérialization de l'objet
+            Records records = (Records) ois.readObject();
+            return  records.records;
+
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+
     }
 
     private class Records implements Serializable{

@@ -8,7 +8,6 @@ public class Record implements Serializable , Comparable {
 
 
     private String nom;
-    private int score;
 
     public int distanceRestante;
 
@@ -29,10 +28,14 @@ public class Record implements Serializable , Comparable {
         return nom;
     }
 
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
     @Override
     public int compareTo(Object o) {
         if(o instanceof Record){
-            return score - ((Record) o).score;
+            return (int) (timePassed - ((Record) o).timePassed);
         }
         return 0;
     }

@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.effect.ColorAdjust;
@@ -53,6 +54,9 @@ public class ControllerGameView implements Initializable {
     @FXML
     private Label joueurNameLabel;
 
+    @FXML
+    private Button validationButton;
+
     private Parent root;
     private Stage stage;
     private Scene scene;
@@ -71,7 +75,6 @@ public class ControllerGameView implements Initializable {
         main = Main.getInstance();
         main.controllerGameView = this;
         tirage = main.getGameManager();
-        tirage.lancerLesDe();
         tirage.startTimer();
         resetAffichage();
 
@@ -108,12 +111,21 @@ public class ControllerGameView implements Initializable {
 
         textAreaValue.setText("");
 
-        imageViewDe1.setEffect(null);
-        imageViewDe2.setEffect(null);
-        imageViewDe3.setEffect(null);
-        imageViewDe4.setEffect(null);
 
         joueurNameLabel.setText(tirage.getActualJoueur().getNom());
+
+        if(tirage.isLanceDeDisponible()){
+            backWardImageView.setOpacity(1.);
+        }else{
+            backWardImageView.setOpacity(.5);
+        }
+        if(tirage.isValidationDisponible()){
+            validationButton.setOpacity(1.);
+        }else{
+            validationButton.setOpacity(.5);
+        }
+
+
 
     }
 
@@ -176,13 +188,16 @@ public class ControllerGameView implements Initializable {
 
     @FXML
     void onLancerDeClick(MouseEvent event){
-        tirage.resetGame();
 
-        dice1active = false;
-        dice2active = false;
-        dice3active = false;
-        dice4active = false;
+        if(tirage.isLanceDeDisponible()){
 
+            tirage.resetGame();
+
+            dice1active = false;
+            dice2active = false;
+            dice3active = false;
+            dice4active = false;
+        }
         resetAffichage();
 
 
@@ -251,7 +266,11 @@ public class ControllerGameView implements Initializable {
 
     @FXML
     void onValiderDistance(ActionEvent event){
-        tirage.avancerUnJoueur(Integer.parseInt(textAreaValue.getText()));
+
+        if(tirage.isValidationDisponible()){
+            tirage.avancerUnJoueur(Integer.parseInt(textAreaValue.getText()));
+
+        }
         resetAffichage();
 
     }
@@ -304,6 +323,11 @@ public class ControllerGameView implements Initializable {
     void onPasserClick(){
         tirage.passerAuJoueurSuivant();
         resetAffichage();
+        imageViewDe1.setEffect(null);
+        imageViewDe2.setEffect(null);
+        imageViewDe3.setEffect(null);
+        imageViewDe4.setEffect(null);
+
     }
 
 
